@@ -1,0 +1,37 @@
+# X Profile Opener
+
+A lightweight Python utility to iterate through a list of X (Twitter) profiles from a CSV file. This script automates the process of opening URLs in your default browser using keyboard shortcuts.
+
+## Features
+* **CSV Integration**: Reads handles directly from a `screen_name` column.
+* **Hotkeys**: Use 'P' to navigate and 'ESC' to exit.
+* **Debouncing**: Prevents multiple tabs from opening with a single key press.
+* **Resource Efficient**: Low CPU overhead with optimized sleep intervals.
+
+## Prerequisites
+The script requires Python 3.x and the following libraries:
+* `pandas`
+* `keyboard`
+
+Install them via pip:
+```bash
+pip install pandas keyboard
+
+2. **Controls**:
+   * **P**: Open the next profile in the browser.
+   * **ESC**: Close the script.
+
+## Technical Details
+* **Pandas**: Used for robust CSV parsing and handling empty values.
+* **Webbrowser**: Utilizes the standard Python library to interface with the OS default browser.
+* **Input Loop**: Uses a polling mechanism with `0.01s` sleep to maintain responsiveness without high power consumption.
+
+
+## Future Updates
+
+    1. Dynamic File Selection
+    2. GUI for Controls
+    3. Error Handling & Validation
+    4. Progress Persistence
+    5. Multi-Platform Support
+    6. Logging

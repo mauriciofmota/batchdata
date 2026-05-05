@@ -1,0 +1,24 @@
+# --- Data ---
+# Exclude your CSV
+file_csv.csv
+*.csv
+
+# --- Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual
+.venv/
+venv/
+ENV/
+env/
+
+# --- IDE
+# Visual Studio Code settings
+.vscode/
+
+# --- Operating System ---
+.DS_Store
+Thumbs.db
