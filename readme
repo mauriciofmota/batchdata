@@ -25,13 +25,3 @@ pip install pandas keyboard
 * **Pandas**: Used for robust CSV parsing and handling empty values.
 * **Webbrowser**: Utilizes the standard Python library to interface with the OS default browser.
 * **Input Loop**: Uses a polling mechanism with `0.01s` sleep to maintain responsiveness without high power consumption.
-
-
-## Future Updates
-
-    1. Dynamic File Selection
-    2. GUI for Controls
-    3. Error Handling & Validation
-    4. Progress Persistence
-    5. Multi-Platform Support
-    6. Logging
