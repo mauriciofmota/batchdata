@@ -1,49 +1,63 @@
-# X Profile Opener
+# Social Profile Audit & Data Pipeline
 
 <p align="left">
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas" />
-  <img src="https://img.shields.io/badge/Automation-Script-22D3EE?style=for-the-badge" alt="Automation" />
-  <img src="https://img.shields.io/badge/OS-Webbrowser-Greeen?style=for-the-badge" alt="Webbrowser" />
+  <img src="https://img.shields.io/badge/Data%20Engineering-Pipeline-22D3EE?style=for-the-badge" alt="Data Pipeline" />
 </p>
 
-A lightweight, efficient Python automation utility designed to iterate through a targeted list of X (Twitter) profiles directly from a CSV dataset. By listening for low-level global OS keypresses, it allows developers or data auditors to fast-review user profiles without manually copy-pasting links, while tracking progress through live system auditing files.
+An enterprise-grade data ingestion and operational workflow utility designed to manage, track, and audit targeted user profiles. Transitioned from a local flat-file script to a robust relational data architecture powered by **PostgreSQL** inside **Docker**, ensuring state persistence, structured logging, and transactional integrity.
 
 ---
 
-## Core Features
+## Architecture & Core Features
 
-* **Smart Data Integration**: Seamlessly parses raw CSV spreadsheets, targeting handles listed under the `screen_name` column.
-* **Global Hardware Hotkeys**: Run the script in the background and cycle through links using customizable, single-key commands.
-* **Persistent Telemetry Logs**: Automatically creates and updates a flat text file (`history_log.txt`) that logs exactly when and which profiles were processed, complete with high-precision system timestamps.
-* **Software Debouncing Logic**: Built-in state timers prevent hardware stutter from opening duplicated browser tabs with a single key press.
-* **Low-Overhead Footprint**: Uses optimized polling sleep loops to run with near-zero CPU and resource utilization.
+- **Containerized Relational Database**: Deploys a persistent PostgreSQL instance via Docker, featuring custom `ENUM` types, foreign key constraints (`ON DELETE CASCADE`), and transactional audit logs.
+- **Automated Seeding & ETL**: Programmatic ingestion pipeline that seeds relational tables with handles, avoiding duplication via `ON CONFLICT` clauses.
+- **Stateful Audit Workflow**: Manages profile states (`PENDING`, `IN_PROGRESS`, `COMPLETED`, `FLAGGED`) to prevent redundant reviews.
+- **Low-Overhead Automation**: Interacts with the operating system's default browser runtime (`webbrowser`) for rapid evaluation without heavy WebDriver footprints.
+
+---
+
+## Database Schema
+
+The core PostgreSQL database (`social_audit_db`) is structured around two main relational tables:
+1. **`profiles`**: Stores unique screen names, lifecycle status (`audit_status` ENUM), and creation timestamps.
+2. **`audit_logs`**: Tracks operational history, foreign keys referencing profiles, timestamps, and audit notes.
 
 ---
 
 ## Prerequisites & Setup
 
-This automation utility requires **Python 3.x** and a couple of external dependencies. 
+Ensure you have **Docker Desktop** and **Python 3.x** installed on your machine.
 
-### 1. Install Dependencies
-Open your development terminal and run:
+### 1. Run PostgreSQL via Docker
+Start the database container on port `5432`:
+```bash
+docker run --name postgres-audit -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
 
-pip install pandas keyboard
 
-### 2. Prepare Your Dataset
-Ensure your source data file is saved as file_csv.csv in the root directory. The file must contain a column named exactly screen_name:
+### 2. Install Dependencies
+Install the required Python packages:
+Bash
 
-```
-id,screen_name,location
-1,elonmusk,Texas
-2,nasa,Space
-```
+pip install -r requirements.txt
 
-## Controls
-P - Next Profile
-ESC - Terminate
+### 3. Run the Ingestion Seed
 
-## Technical Implementation Details
-Data Management (pandas): Utilizes DataFrame vector analysis to process massive sheets instantly.
-Native Interfacing (webbrowser): Connects directly to your operating system's default browser runtime configurations without requiring heavy webdriver installations (like Selenium).
-System Optimization: Implements a 0.01 cooldown so you pc do not explode.
+Populate the database with initial profiles:
+Bash
+
+python scripts/ingest_csv.py
+
+Technical Stack
+
+    Database & Containerization: PostgreSQL 15+, Docker / WSL 2
+
+    Data Manipulation: Pandas & NumPy
+
+    Database Connectivity: Psycopg2-binary
+
+    OS Interfacing: Native browser runtime integration
