@@ -1,0 +1,105 @@
+<!--
+    Este é um modelo HTML simples para a interface do usuário do painel de auditoria.
+    Ele utiliza o flask para auditar os dados e facilitar a navegação entre perfis.
+    O estilo é minimalista, com cores escuras e botões destacados para ações principais.
+-->
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Dashboard</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #000000; padding: 2rem; border-radius: 12px; width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        h2 { margin-top: 0; color: #38bdf8; }
+        .handle { font-size: 1.5rem; font-weight: bold; margin: 1.5rem 0; padding: 0.75rem; background: #0f172a; border-radius: 8px; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        button { padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-open { background: #7dd3fc; color: #0f172a; }
+        .btn-open:hover { background: #abe4ff; }
+        .btn-done { background: #22c55e; color: #0f172a; }
+        .btn-done:hover { background: #4ade80; }
+        .btn-flag { background: #ef4444; color: rgb(0, 0, 0); }
+        .btn-flag:hover { background: #f87171; }
+        .btn-reset { background: #f59e0b; color: #0f172a; margin-top: 15px; }
+        .btn-reset:hover { background: #fbbf24; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>OSINT Audit Queue</h2>
+        <div id="content">
+            <div class="handle" id="handleDisplay">A carregar...</div>
+            <div class="btn-group">
+                <button class="btn-open" onclick="openAllTabs()"> Abrir Redes Sociais</button>
+                <button class="btn-done" onclick="submitAudit('COMPLETED')"> Concluir & Próximo (Enter)</button>
+                <button class="btn-flag" onclick="submitAudit('FLAGGED')"> Sinalizar / Ignorar</button>
+            </div>
+        </div>
+        <button class="btn-reset" onclick="resetQueue()">Resetar Fila (Testes)</button>
+    </div>
+
+    <script>
+        let currentProfile = null;
+
+        async function loadNext() {
+            const res = await fetch('/api/next');
+            const data = await res.json();
+            
+            if (data.done) {
+                document.getElementById('content').innerHTML = `
+                    <div class="handle">🎉 Fila Vazia!</div>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Todos os perfis foram auditados.</p>
+                `;
+                currentProfile = null;
+                return;
+            }
+            
+
+            document.getElementById('content').innerHTML = `
+                <div class="handle" id="handleDisplay">@${data.screen_name}</div>
+                <div class="btn-group">
+                    <button class="btn-open" onclick="openAllTabs()"> Abrir Redes Sociais</button>
+                    <button class="btn-done" onclick="submitAudit('COMPLETED')"> Concluir & Próximo (Enter)</button>
+                    <button class="btn-flag" onclick="submitAudit('FLAGGED')"> Sinalizar / Ignorar</button>
+                </div>
+            `;
+            currentProfile = data;
+        }
+
+        function openAllTabs() {
+            if (!currentProfile) return;
+            Object.values(currentProfile.urls).forEach(url => window.open(url, '_blank'));
+        }
+
+        async function submitAudit(status) {
+            if (!currentProfile) return;
+            await fetch('/api/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: currentProfile.id,
+                    status: status,
+                    notes: `Audited via Web UI with status: ${status}`
+                })
+            });
+            loadNext();
+        }
+
+        async function resetQueue() {
+            const res = await fetch('/api/reset', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                loadNext();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && currentProfile) submitAudit('COMPLETED');
+        });
+
+        loadNext();
+    </script>
+</body>
+</html>
