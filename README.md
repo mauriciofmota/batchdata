@@ -35,7 +35,7 @@ Ensure you have **Docker Desktop** and **Python 3.x** installed on your machine.
 
 ### 1. Run PostgreSQL via Docker
 Start the database container on port `5432`:
-```bash
+
 docker run --name postgres-audit -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
 
 
