@@ -25,7 +25,6 @@ An enterprise-grade data ingestion and operational auditing web application desi
 
 ## Project Structure
 
-```text
 ├── scripts/
 │   ├── app.py           # Flask server, routing, and OOP repository layer
 │   ├── ingest_csv.py    # ETL extraction and data sanitization module
