@@ -22,23 +22,12 @@ Módulo: Ingestão de Dados (Extract Layer)
 
 import psycopg2
 
-DB_CONFIG = {
-    "dbname": "social_audit_db",
-    "user": "postgres",
-    "password": "password",
-    "host": "localhost",
-    "port": "5432"
-}
-
 def seed_profiles():
     # Lista de perfis de exemplo para a auditoria, mude aqui se quiser adicionar ou remover perfis
     sample_users = [
+        "mauriciofmota"
         "dev_python_br",
-        "dados_analise",
-        "tech_lead_sp",
-        "engenharia_dados",
-        "pythonista_rio",
-        "social_auditor"
+        "ifb_brasilia",
     ]
 
     conn = psycopg2.connect(**DB_CONFIG)

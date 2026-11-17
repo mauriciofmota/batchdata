@@ -46,7 +46,7 @@ docker run --name postgres-audit -e POSTGRES_PASSWORD=password -p 5432:5432 -d p
 2. Configure Environment Variables
 
 Create a .env file in the root directory with your database configurations:
-Code snippet
+Code snippet(JUST A .ENV MODEL)
 
 DB_NAME=social_audit_db
 DB_USER=postgres
