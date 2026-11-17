@@ -25,16 +25,6 @@ An enterprise-grade data ingestion and operational auditing web application desi
 
 ## Project Structure
 
-├── scripts/
-│   ├── app.py           # Flask server, routing, and OOP repository layer
-│   ├── ingest_csv.py    # ETL extraction and data sanitization module
-│   └── ...
-├── templates/
-│   └── index.html       # Interactive web dashboard interface
-├── .env                 # Environment variables (DB credentials)
-├── requirements.txt     # Python project dependencies
-└── README.md
-
 Database Schema
 
 The core PostgreSQL database (social_audit_db) is structured around two main relational tables:
